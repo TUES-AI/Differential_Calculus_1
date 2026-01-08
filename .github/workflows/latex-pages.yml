@@ -1,4 +1,4 @@
-name: Build LaTeX PDF and Push to gh-pages
+name: Build LaTeX PDF and Deploy to Pages
 
 on:
   push:
@@ -12,26 +12,28 @@ on:
       - "**/*.jpg"
       - "**/*.jpeg"
       - "**/*.pdf"
-      - ".github/workflows/latex-gh-pages.yml"
+      - ".github/workflows/latex-pages.yml"
       - "scripts/generate_index.py"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: "gh-pages"
+  group: "pages"
   cancel-in-progress: true
 
 env:
-  MAIN_TEX: "main.tex"
-  SITE_TITLE: "My LaTeX PDF"
+  MAIN_TEX: "main.tex" # <-- set your root tex
 
 jobs:
-  build_and_publish:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Compile LaTeX (latexmk)
         uses: xu-cheng/latex-action@v4
@@ -40,22 +42,34 @@ jobs:
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
           latexmk_shell_escape: true
 
-      - name: Build site folder
+      - name: Prepare Pages artifact
         shell: bash
         run: |
           set -euxo pipefail
           mkdir -p dist
+
           PDF="${MAIN_TEX%.tex}.pdf"
+          test -f "$PDF"
+
+          # stable name
           cp "$PDF" dist/document.pdf
+
+          # title auto-detected from GITHUB_REPOSITORY; no need to pass --title
           python3 scripts/generate_index.py \
             --out dist/index.html \
-            --pdf document.pdf \
-            --title "${SITE_TITLE}"
+            --pdf document.pdf
 
-      - name: Publish to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: dist
-          force_orphan: true
+          path: dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
