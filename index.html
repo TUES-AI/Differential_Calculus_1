@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My LaTeX PDF</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --pad: 16px;
+      --maxw: 1100px;
+      --border: rgba(127,127,127,.35);
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;
+      line-height: 1.4;
+    }
+    header {
+      padding: var(--pad);
+      border-bottom: 1px solid var(--border);
+    }
+    header .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    main {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: var(--pad);
+    }
+    .viewer {
+      width: 100%;
+      height: min(85vh, 1000px);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(127,127,127,.08);
+    }
+    .meta {
+      opacity: .8;
+      font-size: .95rem;
+    }
+    a {
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .btn {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <div><strong>My LaTeX PDF</strong></div>
+      <div class="meta">Auto-built from LaTeX on each push.</div>
+    </div>
+    <div>
+      <a class="btn" href="document.pdf" download>Download PDF</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <object class="viewer" data="document.pdf" type="application/pdf">
+    <p>
+      Your browser can’t embed PDFs here.
+      <a href="document.pdf">Open the PDF</a>.
+    </p>
+  </object>
+</main>
+</body>
+</html>
