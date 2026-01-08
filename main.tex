@@ -1,46 +1,1155 @@
 \documentclass[12pt]{article}
-\usepackage{lingmacros}
-\usepackage{tree-dvips}
+
+% ---------- Пакети ----------
+\usepackage[bulgarian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\geometry{margin=2.5cm}
+
+\title{\textbf{Функции и интуиция за граници}\\
+Подготовка за диференциално смятане и AI}
+\author{}
+\date{}
+
 \begin{document}
+\maketitle
 
-\section*{Notes for My Paper}
+% =================================================
+\section*{0. Цел на лекцията}
 
-Don't forget to include examples of topicalization.
-They look like this:
+Днес:
+\begin{itemize}
+  \item изграждаме интуиция за функции и графики
+  \item учим наклон, растене/спадане, четност/нечетност
+  \item извеждаме идеята за граница чрез площ под \(y=x^2\) на \([0,1]\)
+\end{itemize}
 
-{\small
-\enumsentence{Topicalization from sentential subject:\\ 
-\shortex{7}{a John$_i$ [a & kltukl & [el & 
-  {\bf l-}oltoir & er & ngii$_i$ & a Mary]]}
-{ & {\bf R-}clear & {\sc comp} & 
-  {\bf IR}.{\sc 3s}-love   & P & him & }
-{John, (it's) clear that Mary loves (him).}}
-}
+% =================================================
+\section*{1. Какво е функция }
 
-\subsection*{How to handle topicalization}
+Функция е правило, което на всеки допустим вход \(x\) съпоставя точно една стойност \(f(x)\).
 
-I'll just assume a tree structure like (\ex{1}).
+\begin{quote}
+Един и същ вход \(\Rightarrow\) един и същ изход.
+Ако при един и същ вход понякога получаваме различни резултати — това \textbf{не} е функция.
+\end{quote}
 
-{\small
-\enumsentence{Structure of A$'$ Projections:\\ [2ex]
-\begin{tabular}[t]{cccc}
-    & \node{i}{CP}\\ [2ex]
-    \node{ii}{Spec} &   &\node{iii}{C$'$}\\ [2ex]
-        &\node{iv}{C} & & \node{v}{SAgrP}
-\end{tabular}
-\nodeconnect{i}{ii}
-\nodeconnect{i}{iii}
-\nodeconnect{iii}{iv}
-\nodeconnect{iii}{v}
-}
-}
+Записът \(f(x)\) означава:
+\begin{quote}
+„Резултатът, който функцията дава при вход \(x\).“
+\end{quote}
 
-\subsection*{Mood}
+\subsection*{Област на дефиниция}
+Не всички \(x\) са позволени. Например:
+\[
+f(x)=\sqrt{x}\quad \Rightarrow \quad x\ge 0
+\]
+(ако работим в реалните числа).
 
-Mood changes when there is a topic, as well as when
-there is WH-movement.  \emph{Irrealis} is the mood when
-there is a non-subject topic or WH-phrase in Comp.
-\emph{Realis} is the mood when there is a subject topic
-or WH-phrase.
+% =================================================
+\section*{2. Графика на функция}
+
+Графиката на функцията е начин да видим всички входове и изходи наведнъж.
+
+\begin{itemize}
+  \item хоризонтална ос (абсциса) — вход \(x\)
+  \item вертикална ос (ордината) — изход \(f(x)\)
+\end{itemize}
+
+Всяка точка \((x,f(x))\) означава:
+\begin{quote}
+„При този вход получаваме този изход.“
+\end{quote}
+
+\subsection*{Вертикален тест}
+Ако една вертикална права пресича „графиката“ повече от веднъж, това не е графика на функция
+(защото един вход би имал два изхода).
+
+% =================================================
+\section*{3. Линейни функции и наклон}
+
+Линейна функция:
+\[
+f(x)=ax+b
+\]
+\begin{itemize}
+  \item \(b=f(0)\) — пресечната точка с оста \(y\)
+  \item \(a\) — наклон
+\end{itemize}
+
+\subsection*{Интуиция за наклона}
+Наклонът отговаря на въпроса:
+\begin{quote}
+Колко се променя \(f(x)\), когато \(x\) се увеличи с 1?
+\end{quote}
+
+Пример: \(f(x)=2x+1\).
+\[
+f(1)=3,\quad f(2)=5
+\]
+Когато \(x\) нараства с 1, стойността на функцията нараства с 2. Значи наклонът е 2.
+
+\subsection*{Расте/спада}
+\begin{itemize}
+  \item ако \(a>0\) — функцията расте (графиката се „качва“ надясно)
+  \item ако \(a<0\) — функцията спада (графиката „слиза“ надясно)
+  \item ако \(a=0\) — функцията е константна
+\end{itemize}
+
+\subsection*{Графика (линейни примери)}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle, grid=both,
+    xmin=-3,xmax=3,ymin=-2,ymax=5,
+    xlabel={$x$}, ylabel={$y$},
+    legend style={at={(0.02,0.98)},anchor=north west},
+    width=11cm, height=7cm
+]
+\addplot[thick, blue, domain=-3:3] {2*x+1};
+\addlegendentry{$y=2x+1$ (расте)}
+\addplot[thick, red, domain=-3:3] {-x+2};
+\addlegendentry{$y=-x+2$ (спада)}
+\addplot[thick, green!60!black, domain=-3:3] {1};
+\addlegendentry{$y=1$ (константа)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Микро-задачи}
+\begin{enumerate}
+  \item Какъв е наклонът на \(y=5x-7\)? Расте ли или спада?
+  \item Намери \(b\) (пресечната точка с \(y\)-оста) за \(y=-3x+4\).
+  \item Ако графиката е права линия, която минава през \((0,2)\) и \((1,5)\), намерете линейната функция.
+\end{enumerate}
+
+\subsection*{Отговори } 
+\begin{itemize}
+  \item \(y=5x-7\): наклон \(a=5\), \textbf{расте}.
+  \item \(y=-3x+4\): \(b=4\).
+  \item През \((0,2)\) и \((1,5)\): наклон \(a=\dfrac{5-2}{1-0}=3\), \(b=2\), \(y=3x+2\).
+\end{itemize}
+
+% =================================================
+\section*{4. Квадратна функция и „форма“}
+
+Квадратна функция:
+\[
+f(x)=x^2
+\]
+
+Интуиция:
+\begin{itemize}
+  \item винаги е \(\ge 0\)
+  \item около 0 расте бавно, далеч от 0 расте бързо
+\end{itemize}
+
+\subsection*{Графика}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle, grid=both,
+    xmin=-3,xmax=3,ymin=-1,ymax=10,
+    xlabel={$x$}, ylabel={$y$},
+    width=11cm, height=7cm
+]
+\addplot[thick, purple, domain=-3:3] {x^2};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Още една графика: параболи с различна „ширина“}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle, grid=both,
+    xmin=-3,xmax=3,ymin=-1,ymax=10,
+    xlabel={$x$}, ylabel={$y$},
+    legend style={at={(0.02,0.98)},anchor=north west},
+    width=11cm, height=7cm
+]
+\addplot[thick, purple, domain=-3:3] {x^2};
+\addlegendentry{$y=x^2$}
+\addplot[thick, orange, domain=-3:3] {2*x^2};
+\addlegendentry{$y=2x^2$ (по-тясна)}
+\addplot[thick, teal, domain=-3:3] {0.5*x^2};
+\addlegendentry{$y=\frac12 x^2$ (по-широка)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Микро-задачи}
+\begin{enumerate}
+  \item Без да смяташ: коя е по-голяма за \(x\in(0,1)\) — \(x\) или \(x^2\)?
+  \item Къде е \(x^2-4\) над оста \(x\) и къде е под нея?
+  \item Как ще се промени графиката, ако добавим \(+3\): \(y=x^2+3\)?
+\end{enumerate}
+
+\subsection*{Отговори }
+\begin{itemize}
+  \item За \(x\in(0,1)\): \(x > x^2\).
+  \item \(x^2-4\ge 0 \Leftrightarrow |x|\ge 2\): над оста за \(x\le -2\) или \(x\ge 2\), под оста за \(-2<x<2\).
+  \item \(y=x^2+3\): цялата парабола се вдига нагоре с 3.
+\end{itemize}
+
+% =================================================
+\subsection*{Още примери за квадратни функции}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle,
+    grid=both,
+    xmin=-4,xmax=4,
+    ymin=-6,ymax=10,
+    xlabel={$x$}, ylabel={$y$},
+    legend style={at={(0.02,0.98)},anchor=north west},
+    width=11cm, height=7cm
+]
+\addplot[thick, blue, domain=-4:4] {x^2};
+\addlegendentry{$y=x^2$}
+
+\addplot[thick, red, domain=-4:4] {x^2-4};
+\addlegendentry{$y=x^2-4$}
+
+\addplot[thick, green!60!black, domain=-4:4] {(x-2)^2};
+\addlegendentry{$y=(x-2)^2$}
+
+\addplot[thick, purple, domain=-4:4] {-x^2+4};
+\addlegendentry{$y=-x^2+4$}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+% =================================================
+\subsection*{Произволна квадратна функция}
+
+Разглеждаме функцията:
+\[
+f(x)=x^2-2x-3
+\]
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle,
+    grid=both,
+    xmin=-4,xmax=4,
+    ymin=-6,ymax=6,
+    xlabel={$x$}, ylabel={$y$},
+    width=11cm, height=7cm
+]
+\addplot[thick, teal, domain=-4:4] {x^2-2*x-3};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+% =================================================
+\subsection*{Минимум и пресечни точки}
+
+За функцията \(f(x)=x^2-2x-3\):
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle,
+    grid=both,
+    xmin=-4,xmax=4,
+    ymin=-6,ymax=6,
+    xlabel={$x$}, ylabel={$y$},
+    width=11cm, height=7cm
+]
+% графика
+\addplot[thick, blue, domain=-4:4] {x^2-2*x-3};
+
+% връх (минимум)
+\addplot[only marks, mark=*, mark size=2.5pt, red] coordinates {(1,-4)};
+\node[red, above left] at (axis cs:1,-4) {минимум};
+
+% ос на симетрия
+\addplot[red!60, dashed] coordinates {(1,-6) (1,6)};
+\node[red!60, below] at (axis cs:1,-6) {$x=1$};
+
+% пресечни точки с x-оста
+\addplot[only marks, mark=*, mark size=2.5pt, black] coordinates {(-1,0) (3,0)};
+\node[below] at (axis cs:-1,0) {$-1$};
+\node[below] at (axis cs:3,0) {$3$};
+
+% пресечна точка с y-оста
+\addplot[only marks, mark=*, mark size=2.5pt, black] coordinates {(0,-3)};
+\node[left] at (axis cs:0,-3) {$-3$};
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Кога имаме максимум?}
+
+Ако коефициентът пред \(x^2\) е отрицателен (напр. \(g(x)=-x^2+4x+1\)),
+параболата е отворена надолу и върхът е \textbf{максимум}.
+
+
+% =================================================
+\section*{5. Четни и нечетни функции (симетрии)}
+
+\subsection*{Четна функция}
+\[
+f(-x)=f(x)
+\]
+Графика: симетрия спрямо оста \(y\). Примери: \(x^2\), \(\cos x\), \(|x|\).
+
+\subsection*{Нечетна функция}
+\[
+f(-x)=-f(x)
+\]
+Графика: симетрия спрямо началото. Примери: \(x\), \(x^3\), \(\sin x\).
+
+\subsection*{Графики: четна и нечетна}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle, grid=both,
+    xmin=-3,xmax=3,ymin=-2,ymax=9,
+    xlabel={$x$}, ylabel={$y$},
+    legend style={at={(0.02,0.98)},anchor=north west},
+    width=11cm, height=7cm
+]
+\addplot[thick, purple, domain=-3:3] {x^2};
+\addlegendentry{$y=x^2$ (четна)}
+\addplot[thick, blue, domain=-3:3] {x^3/3};
+\addlegendentry{$y=\frac{x^3}{3}$ (нечетна)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Допълнителни графики (|x|, sin, cos)}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle, grid=both,
+    xmin=-6.5,xmax=6.5,ymin=-2.5,ymax=2.5,
+    xlabel={$x$}, ylabel={$y$},
+    legend style={at={(0.02,0.98)},anchor=north west},
+    width=11cm, height=7cm
+]
+\addplot[thick, teal, domain=-6.28:6.28, samples=300] {sin(deg(x))};
+\addlegendentry{$y=\sin x$ (нечетна)}
+\addplot[thick, orange, domain=-6.28:6.28, samples=300] {cos(deg(x))};
+\addlegendentry{$y=\cos x$ (четна)}
+\addplot[thick, green!50!black, domain=-6.28:6.28, samples=300] {abs(x)/3};
+\addlegendentry{$y=\frac{|x|}{3}$ (четна)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Задачи (четност/нечетност)}
+\begin{enumerate}
+  \item Определи дали е четна/нечетна/нито: \(x^2+1\), \(x^3-x\), \(|x|\), \(\sin x+\cos x\).
+  \item Ако \(f\) е четна, какво можеш да кажеш за \(f(5)\) и \(f(-5)\)?
+  \item Ако \(g\) е нечетна, какво е \(g(0)\)?
+\end{enumerate}
+
+\subsection*{Отговори}
+\begin{itemize}
+  \item \(x^2+1\): четна. \ \ \(x^3-x\): нечетна. \ \ \(|x|\): четна. \ \ \(\sin x+\cos x\): нито.
+  \item \(f(5)=f(-5)\).
+  \item \(g(0)=0\).
+\end{itemize}
+
+% =================================================
+\section*{6. Финитистка и инфинитистка математика}
+
+\subsection*{Финитистки поглед}
+\begin{itemize}
+  \item работим само с крайни приближения
+  \item безкрайността е „език“ за „много голямо“
+\end{itemize}
+
+\subsection*{Инфинитистки поглед}
+\begin{itemize}
+  \item безкрайността е легитимна идея
+  \item границите могат да имат точни стойности
+\end{itemize}
+
+
+% =================================================
+\section*{7. Раждането на границата чрез площ под \(x^2\) }
+
+Искаме площта под графиката:
+\[
+y=x^2 \quad \text{за } x\in[0,1].
+\]
+
+\subsection*{Проблем}
+Кривата е „гладка“, но не е правоъгълник или триъгълник.
+Ние обаче умеем да намираме площ на правоъгълници.
+Затова ще направим умишлено неточно приближение.
+
+\subsection*{Стъпка 1: Разделяме интервала}
+Разделяме \([0,1]\) на \(N\) равни части. Широчината на всяка е:
+\[
+\Delta x=\frac{1}{N}.
+\]
+
+\subsection*{Стъпка 2: Правоъгълници}
+Ще построим правоъгълници при \(x=\frac{1}{N},\frac{2}{N},\dots,\frac{N-1}{N}\).
+
+\begin{itemize}
+  \item широчина: \(\frac{1}{N}\)
+  \item височина: \(\left(\frac{1}{N}\right)^2,\left(\frac{2}{N}\right)^2,\dots,\left(\frac{N-1}{N}\right)^2\)
+\end{itemize}
+
+Лицата на правоъгълниците са:
+\[
+\frac{1}{N}\left(\frac{1}{N}\right)^2,\quad
+\frac{1}{N}\left(\frac{2}{N}\right)^2,\quad
+\dots,\quad
+\frac{1}{N}\left(\frac{N-1}{N}\right)^2.
+\]
+
+\subsection*{Стъпка 3: Приближена площ }
+Нека \(S_{\text{пр.}}\) е приближената площ (правоъгълници). Тогава:
+\[
+S_{\text{пр.}}
+=
+\frac{1}{N}\left(\frac{1}{N}\right)^2
++
+\frac{1}{N}\left(\frac{2}{N}\right)^2
++
+\cdots
++
+\frac{1}{N}\left(\frac{N-1}{N}\right)^2.
+\]
+
+Сега изнасяме \(\frac{1}{N^3}\):
+\[
+S_{\text{пр.}}
+=
+\frac{1^2+2^2+\cdots+(N-1)^2}{N^3}.
+\]
+
+Това е \textbf{грешно} за крайно \(N\), но:
+
+\begin{quote}
+Колкото по-голямо е \(N\), толкова по-тесни са правоъгълниците и толкова по-малка е грешката.
+\end{quote}
+
+\subsection*{Стъпка 4: Идеята за граница}
+Истинската площ е стойността, към която се доближава \(S_{\text{пр.}}\), когато \(N\to\infty\).
+Ще използваме формулата за сбор на квадрати (която доказваме в края на материала):
+\[
+1^2+2^2+\cdots+m^2=\frac{m(m+1)(2m+1)}{6}.
+\]
+
+Тук \(m=N-1\). Следователно:
+\[
+1^2+2^2+\cdots+(N-1)^2=\frac{(N-1)N(2N-1)}{6}.
+\]
+
+Замествайки в \(S_{\text{пр.}}\):
+\[
+S_{\text{пр.}}
+=
+\frac{\frac{(N-1)N(2N-1)}{6}}{N^3}
+=
+\frac{(N-1)(2N-1)}{6N^2}.
+\]
+
+Разкриваме числителя:
+\[
+(N-1)(2N-1)=2N^2-3N+1.
+\]
+
+Тогава:
+\[
+S_{\text{пр.}}=\frac{2N^2-3N+1}{6N^2}
+=
+\frac{2}{6}-\frac{3}{6N}+\frac{1}{6N^2}.
+\]
+
+Когато \(N\to\infty\), последните два члена отиват към 0 и остава:
+\[
+\lim_{N\to\infty}S_{\text{пр.}}=\frac{1}{3}.
+\]
+
+% =================================================
+\section*{8. Цветна графика със защрихована площ}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle,
+    xmin=0,xmax=1.1,
+    ymin=0,ymax=1.1,
+    grid=both,
+    xlabel={$x$},
+    ylabel={$y$},
+    width=11cm,
+    height=7cm
+]
+\addplot[domain=0:1, samples=200, thick, blue]{x^2};
+\addplot[domain=0:1, samples=200, draw=none, fill=blue!25]{x^2}\closedcycle;
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+% =================================================
+\section*{9. Правоъгълници}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines=middle,
+    xmin=0,xmax=1.1,
+    ymin=0,ymax=1.1,
+    grid=both,
+    xlabel={$x$},
+    ylabel={$y$},
+    width=11cm,
+    height=7cm
+]
+% крива y = x^2
+\addplot[domain=0:1, samples=200, thick, blue]{x^2};
+
+% правоъгълници – долна сума (hardcoded)
+\addplot[fill=red!30, draw=red] coordinates {
+  (0.0, 0)   (0.0, 0.0)   (0.2, 0.0)   (0.2, 0)
+};
+
+\addplot[fill=red!30, draw=red] coordinates {
+  (0.2, 0)   (0.2, 0.04)  (0.4, 0.04)  (0.4, 0)
+};
+
+\addplot[fill=red!30, draw=red] coordinates {
+  (0.4, 0)   (0.4, 0.16)  (0.6, 0.16)  (0.6, 0)
+};
+
+\addplot[fill=red!30, draw=red] coordinates {
+  (0.6, 0)   (0.6, 0.36)  (0.8, 0.36)  (0.8, 0)
+};
+
+\addplot[fill=red!30, draw=red] coordinates {
+  (0.8, 0)   (0.8, 0.64)  (1.0, 0.64)  (1.0, 0)
+};
+
+
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Задачи }
+\begin{enumerate}
+  \item Ако взимаме височината в левия край, приближението ще е по-голямо или по-малко? (За \(x^2\) на \([0,1]\).)
+  \item Какво ще стане с грешката, ако \(N\) стане 10, 100, 1000?
+  \item Можем ли някога с крайно \(N\) да получим „перфектната“ площ за крива? Какво мислиш?
+\end{enumerate}
+
+\subsection*{Отговори }
+\begin{itemize}
+  \item За \(x^2\) на \([0,1]\) (растяща функция): ляв край дава \textbf{по-малко} приближение, десен край дава \textbf{по-голямо}.
+  \item Грешката намалява, защото правоъгълниците стават по-тесни.
+  \item С крайно \(N\) — почти никога „перфектно“ за крива; идеята на границата е да опишем какво става при безкрайно финно делене.
+\end{itemize}
+
+% =================================================
+\section*{10. Граници: задачи 1–17 }
+
+\subsection*{Полезни техники}
+\begin{itemize}
+  \item При \(x\to\infty\): сравняваме най-високите степени или делим на най-високата степен.
+  \item Факторизация: \(x^2-a^2=(x-a)(x+a)\).
+  \item Рационализация: умножаваме по „спрегнатото“ (същото, но със сменен знак).
+  \item За корени от степен 3: \(a^3-b^3=(a-b)(a^2+ab+b^2)\).
+\end{itemize}
+
+% ------------------ 1 ------------------
+\subsection*{1. \(\displaystyle \lim_{x\to\infty}\frac{x^2-3x+4}{x+4}\)}
+
+\textbf{Решение:}  
+Когато \(x\) е много голямо, най-важни са членовете с най-висока степен.
+В числителя имаме \(x^2\), а в знаменателя имаме \(x\). Това подсказва, че дробта расте приблизително като \(x\).
+
+Най-сигурният начин: делим числителя на знаменателя (или преобразуваме):
+
+\[
+\frac{x^2-3x+4}{x+4}
+=
+\frac{(x+4)(x-7)+32}{x+4}
+\]
+защото:
+\[
+(x+4)(x-7)=x^2-7x+4x-28=x^2-3x-28.
+\]
+За да стане \(x^2-3x+4\), добавяме 32.
+
+Тогава:
+\[
+\frac{x^2-3x+4}{x+4} = x-7 + \frac{32}{x+4}.
+\]
+
+Сега гледаме границата:
+\[
+\lim_{x\to\infty}\left(x-7+\frac{32}{x+4}\right).
+\]
+Членът \(\frac{32}{x+4}\to 0\), но \(x-7\to +\infty\). Следователно:
+\[
+\boxed{+\infty}.
+\]
+
+% ------------------ 2 ------------------
+\subsection*{2. \(\displaystyle \lim_{x\to\infty}\left(\frac{2x-1}{3x+1}-\frac{2x^2+3}{3x^2-1}\right)\)}
+
+\textbf{Решение:}  
+Това е разлика на две дроби, и за \(x\to\infty\) можем да намерим границата на всяка отделно.
+
+\textbf{Първа дроб:}
+\[
+\frac{2x-1}{3x+1}.
+\]
+Делим числител и знаменател на \(x\):
+\[
+\frac{2-\frac{1}{x}}{3+\frac{1}{x}} \xrightarrow[x\to\infty]{} \frac{2-0}{3+0}=\frac{2}{3}.
+\]
+
+\textbf{Втора дроб:}
+\[
+\frac{2x^2+3}{3x^2-1}.
+\]
+Делим числител и знаменател на \(x^2\):
+\[
+\frac{2+\frac{3}{x^2}}{3-\frac{1}{x^2}} \xrightarrow[x\to\infty]{} \frac{2+0}{3-0}=\frac{2}{3}.
+\]
+
+Значи цялата граница е:
+\[
+\frac{2}{3}-\frac{2}{3}=0
+\]
+\[
+\boxed{0}.
+\]
+
+% ------------------ 3 ------------------
+\subsection*{3. \(\displaystyle \lim_{x\to\infty}\frac{x^2-4}{x-2}\)}
+
+\textbf{Решение:}  
+Факторизираме разлика на квадрати:
+\[
+x^2-4=(x-2)(x+2).
+\]
+Тогава за \(x\ne 2\):
+\[
+\frac{x^2-4}{x-2}=\frac{(x-2)(x+2)}{x-2}=x+2.
+\]
+Сега:
+\[
+\lim_{x\to\infty}(x+2)=+\infty.
+\]
+\[
+\boxed{+\infty}.
+\]
+
+% ------------------ 4 ------------------
+\subsection*{4. \(\displaystyle \lim_{x\to\infty}\frac{x^4+3x^2}{x^5+x^3+2x^2}\)}
+
+\textbf{Решение:}  
+Най-високата степен в знаменателя е \(x^5\). Делим всичко на \(x^5\):
+\[
+\frac{\frac{x^4}{x^5}+\frac{3x^2}{x^5}}{\frac{x^5}{x^5}+\frac{x^3}{x^5}+\frac{2x^2}{x^5}}
+=
+\frac{\frac{1}{x}+\frac{3}{x^3}}{1+\frac{1}{x^2}+\frac{2}{x^3}}.
+\]
+При \(x\to\infty\) всички \(\frac{1}{x},\frac{1}{x^2},\frac{1}{x^3}\to 0\). Значи:
+\[
+\frac{0+0}{1+0+0}=0
+\]
+\[
+\boxed{0}.
+\]
+
+% ------------------ 5 ------------------
+\subsection*{5. \(\displaystyle \lim_{x\to\infty}\frac{x^2-5x+4}{x^2+x-2}\)}
+
+\textbf{Решение:}  
+Най-високата степен е \(x^2\). Делим на \(x^2\):
+\[
+\frac{1-\frac{5}{x}+\frac{4}{x^2}}{1+\frac{1}{x}-\frac{2}{x^2}}
+\xrightarrow[x\to\infty]{}
+\frac{1-0+0}{1+0-0}=1.
+\]
+\[
+\boxed{1}.
+\]
+
+% ------------------ 6 ------------------
+\subsection*{6. \(\displaystyle \lim_{x\to\infty}\left(\frac{3x}{5x-1}\cdot\frac{x^2+1}{x^2+2x-1}\right)\)}
+
+\textbf{Решение:}  
+Имаме произведение на две дроби. Намираме границите им поотделно.
+
+\textbf{Първа дроб:}
+\[
+\frac{3x}{5x-1}.
+\]
+Делим на \(x\):
+\[
+\frac{3}{5-\frac{1}{x}} \xrightarrow[x\to\infty]{} \frac{3}{5}.
+\]
+
+\textbf{Втора дроб:}
+\[
+\frac{x^2+1}{x^2+2x-1}.
+\]
+Делим на \(x^2\):
+\[
+\frac{1+\frac{1}{x^2}}{1+\frac{2}{x}-\frac{1}{x^2}}
+\xrightarrow[x\to\infty]{}
+\frac{1+0}{1+0-0}=1.
+\]
+
+Произведението:
+\[
+\frac{3}{5}\cdot 1=\frac{3}{5}.
+\]
+\[
+\boxed{\frac{3}{5}}.
+\]
+
+% ------------------ 7 ------------------
+\subsection*{7. \(\displaystyle \lim_{x\to\infty}\frac{ax^3+b}{cx^3+d}\quad (c\neq 0)\)}
+
+\textbf{Решение:}  
+Най-високата степен е \(x^3\). Делим числител и знаменател на \(x^3\):
+\[
+\frac{a+\frac{b}{x^3}}{c+\frac{d}{x^3}}.
+\]
+При \(x\to\infty\): \(\frac{b}{x^3}\to 0\) и \(\frac{d}{x^3}\to 0\). Получаваме:
+\[
+\frac{a}{c}.
+\]
+\[
+\boxed{\frac{a}{c}}.
+\]
+
+% ------------------ 8 ------------------
+\subsection*{8. \(\displaystyle \lim_{x\to\infty}\frac{-3-x}{x^2+2x+3}\)}
+
+\textbf{Решение:}  
+Степента на числителя е 1, на знаменателя е 2. Дробта се държи като \(\frac{x}{x^2}=\frac{1}{x}\to 0\).
+Да го направим формално: делим на \(x^2\):
+\[
+\frac{\frac{-x}{x^2}+\frac{-3}{x^2}}{1+\frac{2}{x}+\frac{3}{x^2}}
+=
+\frac{-\frac{1}{x}-\frac{3}{x^2}}{1+\frac{2}{x}+\frac{3}{x^2}}
+\xrightarrow[x\to\infty]{}
+\frac{0-0}{1+0+0}=0.
+\]
+\[
+\boxed{0}.
+\]
+
+% ------------------ 9 ------------------
+\subsection*{9. \(\displaystyle \lim_{x\to\infty}\frac{(x+3)(x+5)}{x^2+1}\)}
+
+\textbf{Решение:}  
+Разкриваме числителя:
+\[
+(x+3)(x+5)=x^2+8x+15.
+\]
+Тогава:
+\[
+\frac{x^2+8x+15}{x^2+1}.
+\]
+Делим на \(x^2\):
+\[
+\frac{1+\frac{8}{x}+\frac{15}{x^2}}{1+\frac{1}{x^2}}
+\xrightarrow[x\to\infty]{}
+\frac{1+0+0}{1+0}=1.
+\]
+\[
+\boxed{1}.
+\]
+
+% ------------------ 10 ------------------
+\subsection*{10. \(\displaystyle \lim_{x\to 0}\frac{\sqrt{x+1}-1}{x}\)}
+
+\textbf{Решение:}  
+Тук директното заместване дава \(0/0\). Трикът е рационализация.
+
+Умножаваме числителя и знаменателя по спрегнатото \(\sqrt{1+x}+1\):
+\[
+\frac{\sqrt{1+x}-1}{x}\cdot \frac{\sqrt{1+x}+1}{\sqrt{1+x}+1}
+=
+\frac{(1+x)-1}{x(\sqrt{1+x}+1)}
+=
+\frac{x}{x(\sqrt{1+x}+1)}
+=
+\frac{1}{\sqrt{1+x}+1}.
+\]
+Сега вече можем да заместим \(x=0\):
+\[
+\frac{1}{\sqrt{1}+1}=\frac{1}{2}.
+\]
+\[
+\boxed{\frac{1}{2}}.
+\]
+
+% ------------------ 11 ------------------
+\subsection*{11. \(\displaystyle \lim_{x\to 0}\frac{\sqrt{1+x}-\sqrt{1-x}}{4x}\)}
+
+\textbf{Решение:}  
+Пак имаме \(0/0\). Рационализираме числителя чрез умножение по спрегнатото:
+\[
+\frac{\sqrt{1+x}-\sqrt{1-x}}{4x}\cdot
+\frac{\sqrt{1+x}+\sqrt{1-x}}{\sqrt{1+x}+\sqrt{1-x}}
+=
+\frac{(1+x)-(1-x)}{4x\left(\sqrt{1+x}+\sqrt{1-x}\right)}.
+\]
+Числителят:
+\[
+(1+x)-(1-x)=2x.
+\]
+Тогава:
+\[
+\frac{2x}{4x(\sqrt{1+x}+\sqrt{1-x})}
+=
+\frac{1}{2(\sqrt{1+x}+\sqrt{1-x})}.
+\]
+Сега заместваме \(x=0\):
+\[
+\frac{1}{2(1+1)}=\frac{1}{4}.
+\]
+\[
+\boxed{\frac{1}{4}}.
+\]
+
+% ------------------ 12 ------------------
+\subsection*{12. \(\displaystyle \lim_{x\to 0}\frac{\sqrt[3]{1+x^2}-1}{x}\)}
+
+\textbf{Решение:}  
+Директно е \(0/0\). Тук рационализацията е чрез формулата за разлика на кубове.
+
+Нека:
+\[
+a=\sqrt[3]{1+x^2},\qquad b=1.
+\]
+Тогава:
+\[
+a^3-b^3=(a-b)(a^2+ab+b^2).
+\]
+Но:
+\[
+a^3-b^3=(1+x^2)-1=x^2.
+\]
+Следователно:
+\[
+a-b=\frac{x^2}{a^2+ab+b^2}.
+\]
+Това значи:
+\[
+\sqrt[3]{1+x^2}-1=\frac{x^2}{a^2+a+1}.
+\]
+Делим на \(x\):
+\[
+\frac{\sqrt[3]{1+x^2}-1}{x}
+=
+\frac{x^2}{x(a^2+a+1)}
+=
+\frac{x}{a^2+a+1}.
+\]
+Когато \(x\to 0\), имаме \(a=\sqrt[3]{1+x^2}\to 1\), така че знаменателят \(\to 1^2+1+1=3\),
+а числителят \(x\to 0\). Значи:
+\[
+\boxed{0}.
+\]
+
+% ------------------ 13 ------------------
+\subsection*{13. \(\displaystyle \lim_{x\to 5}\frac{\sqrt{x-1}-2}{x-5}\)}
+
+\textbf{Решение:}  
+Директно е \(0/0\). Рационализираме числителя:
+\[
+\frac{\sqrt{x-1}-2}{x-5}\cdot\frac{\sqrt{x-1}+2}{\sqrt{x-1}+2}
+=
+\frac{(x-1)-4}{(x-5)(\sqrt{x-1}+2)}
+=
+\frac{x-5}{(x-5)(\sqrt{x-1}+2)}
+=
+\frac{1}{\sqrt{x-1}+2}.
+\]
+Заместваме \(x=5\):
+\[
+\frac{1}{\sqrt{4}+2}=\frac{1}{4}.
+\]
+\[
+\boxed{\frac{1}{4}}.
+\]
+
+% ------------------ 14 ------------------
+\subsection*{14. \(\displaystyle \lim_{x\to -3}\frac{x+3}{\sqrt{x+4}-1}\)}
+
+\textbf{Решение:}  
+Директно е \(0/0\). Рационализираме знаменателя:
+\[
+\frac{x+3}{\sqrt{x+4}-1}\cdot\frac{\sqrt{x+4}+1}{\sqrt{x+4}+1}
+=
+\frac{(x+3)(\sqrt{x+4}+1)}{(x+4)-1}
+=
+\frac{(x+3)(\sqrt{x+4}+1)}{x+3}.
+\]
+За \(x\neq -3\) съкращаваме \(x+3\):
+\[
+\sqrt{x+4}+1.
+\]
+Заместваме \(x=-3\):
+\[
+\sqrt{1}+1=2.
+\]
+\[
+\boxed{2}.
+\]
+
+% ------------------ 15 ------------------
+\subsection*{15. \(\displaystyle \lim_{x\to 0}\frac{\sqrt{x+n}-\sqrt{n}}{x}\quad (n>0)\)}
+
+\textbf{Решение:}  
+Директно е \(0/0\). Рационализираме:
+\[
+\frac{\sqrt{n+x}-\sqrt{n}}{x}\cdot\frac{\sqrt{n+x}+\sqrt{n}}{\sqrt{n+x}+\sqrt{n}}
+=
+\frac{(n+x)-n}{x(\sqrt{n+x}+\sqrt{n})}
+=
+\frac{x}{x(\sqrt{n+x}+\sqrt{n})}
+=
+\frac{1}{\sqrt{n+x}+\sqrt{n}}.
+\]
+Сега \(x\to 0\):
+\[
+\frac{1}{\sqrt{n}+\sqrt{n}}=\frac{1}{2\sqrt{n}}.
+\]
+\[
+\boxed{\frac{1}{2\sqrt{n}}}.
+\]
+
+% ------------------ 16 ------------------
+\subsection*{16. \(\displaystyle \lim_{x\to 16}\frac{\sqrt[4]{x}-2}{\sqrt{x}-4}\)}
+
+\textbf{Решение:}  
+Директно е \(0/0\). Тук най-чисто е замяна.
+
+Нека:
+\[
+t=\sqrt[4]{x}.
+\]
+Тогава:
+\[
+\sqrt{x}=x^{1/2}=(x^{1/4})^2=t^2.
+\]
+Когато \(x\to 16\), \(\sqrt[4]{16}=2\), тоест \(t\to 2\).
+
+Изразът става:
+\[
+\frac{t-2}{t^2-4}.
+\]
+Факторизираме:
+\[
+t^2-4=(t-2)(t+2).
+\]
+Съкращаваме \(t-2\) (за \(t\neq 2\)):
+\[
+\frac{1}{t+2}.
+\]
+Сега заместваме \(t=2\):
+\[
+\frac{1}{4}.
+\]
+\[
+\boxed{\frac{1}{4}}.
+\]
+
+% ------------------ 17 ------------------
+\subsection*{17. \(\displaystyle \lim_{x\to 1}\frac{\sqrt{x+3}-2}{x-1}\)}
+
+\textbf{Решение:}  
+Директно е \(0/0\). Рационализираме числителя:
+\[
+\frac{\sqrt{x+3}-2}{x-1}\cdot\frac{\sqrt{x+3}+2}{\sqrt{x+3}+2}
+=
+\frac{(x+3)-4}{(x-1)(\sqrt{x+3}+2)}
+=
+\frac{x-1}{(x-1)(\sqrt{x+3}+2)}
+=
+\frac{1}{\sqrt{x+3}+2}.
+\]
+Заместваме \(x=1\):
+\[
+\frac{1}{\sqrt{4}+2}=\frac{1}{4}.
+\]
+\[
+\boxed{\frac{1}{4}}.
+\]
+
+% =================================================
+\section*{11. Доказателство за формулата за сбор на квадрати}
+
+Цел:
+\[
+1^2+2^2+3^2+\cdots+n^2=\frac{n(n+1)(2n+1)}{6}.
+\]
+
+\subsection*{Стъпка 1: Разлика на кубове за два последователни члена}
+
+Започваме от тъждеството за разлика на кубове:
+\[
+a^3-b^3=(a-b)\left(a^2+ab+b^2\right).
+\]
+
+Избираме \(a=n\) и \(b=n-1\). Тогава \(a-b=1\), и получаваме:
+\[
+n^3-(n-1)^3=(n-(n-1))\Big(n^2+n(n-1)+(n-1)^2\Big)
+=1\cdot\Big(n^2+n(n-1)+(n-1)^2\Big).
+\]
+
+Сега разкриваме скобата:
+\[
+n^2+n(n-1)+(n-1)^2
+=n^2+(n^2-n)+(n^2-2n+1)
+=3n^2-3n+1.
+\]
+
+Следователно:
+\[
+\boxed{\,n^3-(n-1)^3=3n^2-3n+1\,}.
+\]
+
+\subsection*{Стъпка 2: Пишем същото за всички стъпки надолу}
+
+По същия начин:
+\[
+(n-1)^3-(n-2)^3=3(n-1)^2-3(n-1)+1,
+\]
+\[
+(n-2)^3-(n-3)^3=3(n-2)^2-3(n-2)+1,
+\]
+\[
+\vdots
+\]
+\[
+2^3-1^3=3\cdot 2^2-3\cdot 2+1,
+\]
+\[
+1^3-0^3=3\cdot 1^2-3\cdot 1+1.
+\]
+
+\subsection*{Стъпка 3: Събираме всички равенства}
+
+Събираме лявата страна на всички равенства:
+\[
+\big(n^3-(n-1)^3\big)+\big((n-1)^3-(n-2)^3\big)+\cdots+\big(1^3-0^3\big).
+\]
+
+Всичко по средата се съкращава:
+\[
+-(n-1)^3+(n-1)^3,\quad -(n-2)^3+(n-2)^3,\ \ldots,\ -1^3+1^3,
+\]
+и остава само:
+\[
+n^3-0^3=n^3.
+\]
+
+Сега събираме дясната страна. Получаваме:
+\[
+n^3
+=
+\big(3n^2-3n+1\big)+\big(3(n-1)^2-3(n-1)+1\big)+\cdots+\big(3\cdot 1^2-3\cdot 1+1\big).
+\]
+
+Групираме „по типове“ членове:
+
+\begin{itemize}
+  \item квадратите: \(3\big(1^2+2^2+\cdots+n^2\big)\)
+  \item линейните: \(-3\big(1+2+\cdots+n\big)\)
+  \item единиците: \(1+1+\cdots+1\) (общо \(n\) пъти) \(\Rightarrow n\)
+\end{itemize}
+
+Тоест:
+\[
+\boxed{\,
+n^3 = 3\sum_{k=1}^{n}k^2 \;-\; 3\sum_{k=1}^{n}k \;+\; n
+\,}.
+\]
+
+\subsection*{Стъпка 4: Изолираме \(\sum k^2\)}
+
+Преместваме останалите членове:
+\[
+3\sum_{k=1}^{n}k^2
+=
+n^3 + 3\sum_{k=1}^{n}k - n.
+\]
+
+Делим на 3:
+\[
+\sum_{k=1}^{n}k^2
+=
+\frac{1}{3}\Big(n^3 + 3\sum_{k=1}^{n}k - n\Big).
+\]
+
+Знаем формулата за сумата на първите \(n\) естествени числа:
+\[
+\sum_{k=1}^{n}k=\frac{n(n+1)}{2}.
+\]
+
+Замествайки:
+\[
+\sum_{k=1}^{n}k^2
+=
+\frac{1}{3}\left(n^3 + 3\cdot\frac{n(n+1)}{2} - n\right).
+\]
+
+\subsection*{Стъпка 5: Опростяване до класическата формула}
+
+Изнасяме \(n\):
+\[
+\sum_{k=1}^{n}k^2
+=
+\frac{n}{3}\left(n^2 + \frac{3(n+1)}{2} - 1\right).
+\]
+
+Събираме в една дроб:
+\[
+n^2 + \frac{3(n+1)}{2} - 1
+=
+\frac{2n^2 + 3(n+1) - 2}{2}
+=
+\frac{2n^2+3n+1}{2}.
+\]
+
+Тогава:
+\[
+\sum_{k=1}^{n}k^2
+=
+\frac{n}{3}\cdot \frac{2n^2+3n+1}{2}
+=
+\frac{n(2n^2+3n+1)}{6}.
+\]
+
+Факторизираме:
+\[
+2n^2+3n+1=(2n+1)(n+1).
+\]
+
+Накрая получаваме:
+\[
+\boxed{\sum_{k=1}^{n}k^2=\frac{n(n+1)(2n+1)}{6}}.
+\]
+
+
 
 \end{document}
